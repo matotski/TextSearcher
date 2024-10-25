@@ -24,8 +24,7 @@ class SearchByWord(StatesGroup):
 
 @router.callback_query(StateFilter(None),F.data == "search_message")
 async def message_reader(callback: CallbackQuery, state: FSMContext):
-    await callback.message.edit_text("Отлично, отправь мне текст", parse_mode=ParseMode.HTML)
-    await callback.message.edit_reply_markup(reply_markup=get_back_keyboard())
+    await callback.message.answer("Отлично, отправь мне текст", reply_markup=get_back_keyboard(), parse_mode=ParseMode.HTML)
     await callback.answer()
     await state.set_state(SearchByWord.text)
 
@@ -33,8 +32,9 @@ async def message_reader(callback: CallbackQuery, state: FSMContext):
 @router.message(SearchByWord.text,F.text)
 async def get_word(message: Message, state: FSMContext):
     await state.update_data(text = message.text)
-    await message.answer("Супер! Теперь отправь мне искомое слово")
+    await message.answer("Супер! Теперь отправь мне искомое слово", reply_markup=get_back_keyboard())
     await state.set_state(SearchByWord.word)
+
 
 @router.message(SearchByWord.word,F.text)
 async def send_sentences(message: Message, state: FSMContext):

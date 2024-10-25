@@ -19,7 +19,6 @@ router = Router()
 
 @router.message(Command('start'))
 async def cmd_start(message: Message):
-
     await message.answer(
         emoji.emojize(
             f':waving_hand: Привет, {message.from_user.first_name} и добро пожаловать в TextSearcher, твой личный помощник по поиску информации в тексте!\n'
@@ -46,11 +45,13 @@ async def main_menu(callback: CallbackQuery):
 
     )
 
+
 @router.callback_query(F.data == "search_few_files")
 async def message_reader(callback: CallbackQuery):
     await callback.message.edit_text("Отправь мне несколько файлов")
     await callback.message.edit_reply_markup(reply_markup=get_back_keyboard())
     await callback.answer()
+
 
 @router.callback_query(F.data == "get_back")
 async def message_back(callback: CallbackQuery):
@@ -62,7 +63,6 @@ async def message_back(callback: CallbackQuery):
             f'    -Количество найденных предложений в файлах: ',     ),
         reply_markup=get_user_keyboard()
     )
-
     await callback.message.edit_reply_markup(reply_markup=get_user_keyboard())
 
 
