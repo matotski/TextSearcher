@@ -16,6 +16,7 @@ import emoji
 router = Router()
 
 
+
 @router.message(Command('start'))
 async def cmd_start(message: Message):
 
@@ -36,25 +37,14 @@ async def cmd_start(message: Message):
 @router.callback_query(F.data == "start_message")
 async def main_menu(callback: CallbackQuery):
     await callback.message.edit_text(
-        f'Менюшка\n'
-        f'\n{callback.from_user.first_name}, ваша статистика:\n'
-        f'    Количество поисков: \n'
-        f'    Количество найденных предложений: \n'
-        f'    Еще чонить',
-        reply_markup=get_user_keyboard()
+        emoji.emojize(
+            f'{callback.from_user.first_name}, ваша статистика:notebook_with_decorative_cover::\n'
+            f'    -Количество поисков : \n'
+            f'    -Количество найденных предложений в сообщениях: \n'
+            f'    -Количество найденных предложений в файлах: ', ),
+        reply_markup= get_user_keyboard()
+
     )
-
-@router.callback_query(F.data == "search_message")
-async def message_reader(callback: CallbackQuery):
-    await callback.message.edit_text("Отправь мне текст", parse_mode=ParseMode.HTML)
-    await callback.message.edit_reply_markup(reply_markup=get_back_keyboard())
-    await callback.answer()
-
-@router.callback_query(F.data == "search_file")
-async def message_reader(callback: CallbackQuery):
-    await callback.message.edit_text("Отправь мне файл")
-    await callback.message.edit_reply_markup(reply_markup=get_back_keyboard())
-    await callback.answer()
 
 @router.callback_query(F.data == "search_few_files")
 async def message_reader(callback: CallbackQuery):
@@ -66,12 +56,11 @@ async def message_reader(callback: CallbackQuery):
 async def message_back(callback: CallbackQuery):
     await callback.message.edit_text(
         emoji.emojize(
-            f':waving_hand: Привет, {callback.from_user.first_name} и добро пожаловать в TextSearcher, твой личный помощник по поиску информации в тексте!\n'
-            f'\n:rocket: Представь: у тебя есть огромный текст, например, презентация, статья или книга. Нужно найти все предложения, где встречается конкретное слово, но вручную просматривать все слишком долго и утомительно?\n'
-            f'\n:thought_balloon: Я могу сделать это за тебя! Просто введи слово, которое ты хочешь найти, и я быстро покажу тебе все предложения, где оно встречается.\n'
-            f'\n:dizzy: Экономия времени, удобство и точность поиска - это то, что я предлагаю. Пробуй!'
-        ),
-
+            f'{callback.from_user.first_name}, ваша статистика:notebook_with_decorative_cover::\n'
+            f'    -Количество поисков : \n'
+            f'    -Количество найденных предложений в сообщениях: \n'
+            f'    -Количество найденных предложений в файлах: ',     ),
+        reply_markup=get_user_keyboard()
     )
 
     await callback.message.edit_reply_markup(reply_markup=get_user_keyboard())
